@@ -1,0 +1,711 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<meta name="color-scheme" content="light dark" />
+<link rel="icon" href="data:," />
+<title>Daily Data Centers</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700;800&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;1,6..72,400&family=IBM+Plex+Mono:wght@400;600&display=swap" rel="stylesheet" />
+<style>
+  :root{
+    --bg:#f2f5f4;
+    --surface:#ffffff;
+    --surface-2:#e8efed;
+    --ink:#15211f;
+    --ink-soft:#42524e;
+    --line:#c9d6d2;
+    --accent:#0e6b5c;
+    --accent-ink:#ffffff;
+    --accent-soft:#dcefe9;
+    --amber:#b45309;
+    --amber-soft:#fbeed3;
+    --against:#9a3412;
+    --against-soft:#fbe3d3;
+    --for-bg:#0e6b5c;
+    --shadow:0 1px 2px rgba(21,33,31,.06),0 8px 24px rgba(21,33,31,.06);
+    --radius:10px;
+  }
+  @media (prefers-color-scheme: dark){
+    :root{
+      --bg:#0d1413;
+      --surface:#16201e;
+      --surface-2:#1d2a28;
+      --ink:#e8efed;
+      --ink-soft:#a7bab4;
+      --line:#2e403c;
+      --accent:#3ec9ae;
+      --accent-ink:#0d1413;
+      --accent-soft:#173a33;
+      --amber:#e5a33c;
+      --amber-soft:#3a2c10;
+      --against:#f0834f;
+      --against-soft:#3d2113;
+      --for-bg:#0e6b5c;
+      --shadow:0 1px 2px rgba(0,0,0,.3),0 8px 24px rgba(0,0,0,.25);
+    }
+  }
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{
+    margin:0;background:var(--bg);color:var(--ink);
+    font-family:"Newsreader",Georgia,serif;
+    font-size:19px;line-height:1.6;
+  }
+  h1,h2,h3,h4,.sans{font-family:"Archivo",system-ui,sans-serif}
+  .mono{font-family:"IBM Plex Mono",ui-monospace,monospace}
+  a{color:var(--accent)}
+  .wrap{max-width:1080px;margin:0 auto;padding:0 20px}
+
+  /* ---------- top bar ---------- */
+  .topbar{
+    position:sticky;top:0;z-index:50;
+    background:var(--bg);border-bottom:1px solid var(--line);
+  }
+  .topbar-in{display:flex;align-items:center;gap:16px;padding:12px 0;flex-wrap:wrap}
+  .brand{font-family:"Archivo",sans-serif;font-weight:800;font-size:20px;letter-spacing:-.01em;color:var(--ink);text-decoration:none}
+  .brand span{color:var(--accent)}
+  .draft-tag{
+    font-family:"IBM Plex Mono",monospace;font-size:11px;letter-spacing:.08em;text-transform:uppercase;
+    border:1px solid var(--amber);color:var(--amber);border-radius:999px;padding:3px 10px;
+  }
+  nav.mainnav{margin-left:auto;display:flex;gap:4px;flex-wrap:wrap}
+  nav.mainnav a{
+    font-family:"Archivo",sans-serif;font-size:14px;font-weight:600;color:var(--ink-soft);
+    text-decoration:none;padding:7px 10px;border-radius:8px;
+  }
+  nav.mainnav a:hover{background:var(--surface-2);color:var(--ink)}
+
+  /* ---------- hero ---------- */
+  .hero{padding:52px 0 40px}
+  .hero-grid{display:grid;grid-template-columns:1.15fr .85fr;gap:36px;align-items:center}
+  .hero h1{font-size:clamp(34px,5.4vw,54px);line-height:1.05;letter-spacing:-.02em;margin:0 0 18px;font-weight:800}
+  .hero p.lede{font-size:21px;color:var(--ink-soft);margin:0 0 22px;max-width:34em}
+  .hero .plain-box{
+    background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);
+    padding:18px 20px;box-shadow:var(--shadow);
+  }
+  .plain-box h2{font-size:15px;text-transform:uppercase;letter-spacing:.07em;margin:0 0 8px;color:var(--accent)}
+  .plain-box p{margin:0;font-size:18px}
+  .hero-cta{display:flex;gap:12px;flex-wrap:wrap;margin-top:24px}
+  .btn{
+    display:inline-block;font-family:"Archivo",sans-serif;font-weight:700;font-size:16px;
+    text-decoration:none;border-radius:9px;padding:13px 22px;border:1px solid transparent;cursor:pointer;
+  }
+  .btn-primary{background:var(--accent);color:var(--accent-ink)}
+  .btn-ghost{background:transparent;color:var(--ink);border-color:var(--line)}
+  .diagram{
+    background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);
+    padding:18px;box-shadow:var(--shadow);
+  }
+  .diagram figcaption{font-size:14px;color:var(--ink-soft);margin-top:10px;font-family:"Archivo",sans-serif}
+
+  /* ---------- sections ---------- */
+  section.guide{padding:44px 0;border-top:1px solid var(--line)}
+  section.guide h2{font-size:clamp(26px,3.6vw,36px);letter-spacing:-.015em;margin:0 0 6px;font-weight:800}
+  .section-intro{color:var(--ink-soft);font-size:20px;max-width:44em;margin:0 0 26px}
+  .cards{display:grid;grid-template-columns:repeat(2,1fr);gap:18px}
+  .card{
+    background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);
+    padding:22px;box-shadow:var(--shadow);
+  }
+  .card h3{margin:0 0 8px;font-size:19px;font-weight:700}
+  .card p{margin:0 0 10px;color:var(--ink-soft);font-size:17.5px}
+  .card p:last-child{margin-bottom:0}
+  .card ul{margin:6px 0 0;padding-left:20px;color:var(--ink-soft);font-size:17.5px}
+  .card li{margin-bottom:6px}
+  .wide{grid-column:1/-1}
+  .steps{counter-reset:step;display:grid;gap:14px}
+  .step{
+    display:grid;grid-template-columns:52px 1fr;gap:16px;align-items:start;
+    background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:18px 20px;box-shadow:var(--shadow);
+  }
+  .step-num{
+    counter-increment:step;width:44px;height:44px;border-radius:50%;
+    background:var(--accent-soft);color:var(--accent);
+    font-family:"Archivo",sans-serif;font-weight:800;font-size:19px;
+    display:flex;align-items:center;justify-content:center;
+  }
+  .step-num::before{content:counter(step)}
+  .step h3{margin:2px 0 6px;font-size:18.5px}
+  .step p{margin:0;color:var(--ink-soft);font-size:17.5px}
+
+  /* glossary */
+  .glossary{display:grid;grid-template-columns:repeat(2,1fr);gap:0 32px}
+  .term{padding:14px 0;border-bottom:1px solid var(--line)}
+  .term dt{font-family:"Archivo",sans-serif;font-weight:700;font-size:17px;margin-bottom:2px}
+  .term dd{margin:0;color:var(--ink-soft);font-size:17px}
+
+  /* digest */
+  .digest-list{display:grid;grid-template-columns:repeat(2,1fr);gap:18px}
+  .note-box{
+    background:var(--amber-soft);border:1px solid var(--line);border-radius:var(--radius);
+    padding:18px 20px;margin-top:22px;font-size:17.5px;
+  }
+  .note-box strong{font-family:"Archivo",sans-serif}
+
+  /* ---------- poll ---------- */
+  .poll{
+    background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);
+    box-shadow:var(--shadow);padding:28px;
+  }
+  .poll h3{margin:0 0 6px;font-size:22px}
+  .poll .poll-q{color:var(--ink-soft);margin:0 0 22px;font-size:18px}
+  .poll-grid{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+  .poll-side{border:1px solid var(--line);border-radius:var(--radius);padding:20px;text-align:center}
+  .poll-count{font-family:"Archivo",sans-serif;font-size:52px;font-weight:800;line-height:1;margin:6px 0 2px}
+  .poll-label{font-family:"IBM Plex Mono",monospace;font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-soft)}
+  .vote-btn{
+    margin-top:14px;width:100%;font-family:"Archivo",sans-serif;font-weight:800;font-size:17px;
+    padding:14px 16px;border-radius:9px;border:none;cursor:pointer;color:#fff;
+  }
+  .vote-for{background:var(--for-bg)}
+  .vote-against{background:#9a3412}
+  @media (prefers-color-scheme: dark){ .vote-against{background:#7c2d12} }
+  .vote-btn:disabled{opacity:.45;cursor:not-allowed}
+  .poll-bar{display:flex;height:14px;border-radius:7px;overflow:hidden;background:var(--surface-2);margin-top:22px;border:1px solid var(--line)}
+  .poll-bar .fill-for{background:var(--for-bg);transition:width .4s ease}
+  .poll-bar .fill-against{background:#c2512c;transition:width .4s ease}
+  .poll-status{margin:16px 0 0;font-size:16.5px;color:var(--ink-soft);text-align:center;min-height:1.5em}
+  .poll-honest{margin:10px 0 0;font-size:15px;color:var(--ink-soft);text-align:center}
+
+  /* ---------- pay ---------- */
+  .pay-grid{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+  .pay-card{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:26px;box-shadow:var(--shadow)}
+  .pay-card h3{margin:0 0 8px;font-size:21px}
+  .pay-card p{color:var(--ink-soft);font-size:17.5px;margin:0 0 12px}
+  .pay-15{
+    display:block;text-align:center;background:var(--accent);color:var(--accent-ink);
+    font-family:"Archivo",sans-serif;font-weight:800;font-size:20px;text-decoration:none;
+    padding:16px 20px;border-radius:9px;margin:14px 0 12px;
+  }
+  .fineprint{font-size:15px;color:var(--ink-soft)}
+  .chime-steps{margin:8px 0 0;padding-left:20px;color:var(--ink-soft);font-size:17.5px}
+  .chime-steps li{margin-bottom:6px}
+  .chime-dest{font-family:"IBM Plex Mono",monospace;font-size:16px;color:var(--ink);word-break:break-all}
+  .subscribe-row{margin-top:18px;background:var(--surface);border:1px dashed var(--line);border-radius:var(--radius);padding:20px 26px;display:flex;gap:18px;align-items:center;flex-wrap:wrap}
+  .btn-disabled{
+    font-family:"Archivo",sans-serif;font-weight:700;font-size:16px;padding:12px 22px;border-radius:9px;
+    border:1px solid var(--line);background:var(--surface-2);color:var(--ink-soft);cursor:not-allowed;
+  }
+  .subscribe-row p{margin:0;color:var(--ink-soft);font-size:16.5px;flex:1;min-width:220px}
+
+  footer{border-top:1px solid var(--line);padding:30px 0 44px;margin-top:10px}
+  footer p{color:var(--ink-soft);font-size:15.5px;margin:0 0 8px}
+
+  @media (max-width:760px){
+    .hero-grid{grid-template-columns:1fr}
+    .cards,.pay-grid,.digest-list,.poll-grid{grid-template-columns:1fr}
+    .glossary{grid-template-columns:1fr}
+    nav.mainnav{margin-left:0}
+    body{font-size:18px}
+  }
+  @media (prefers-reduced-motion: reduce){
+    html{scroll-behavior:auto}
+    .poll-bar .fill-for,.poll-bar .fill-against{transition:none}
+  }
+</style>
+</head>
+<body>
+
+<header class="topbar">
+  <div class="wrap topbar-in">
+    <a class="brand" href="#top">Daily <span>Data Centers</span></a>
+    <span class="draft-tag">Draft — in review</span>
+    <nav class="mainnav" aria-label="Guide sections">
+      <a href="#basics">Basics</a>
+      <a href="#how">How They Work</a>
+      <a href="#power">What They Power</a>
+      <a href="#cooling">Cooling &amp; Energy</a>
+      <a href="#jobs">Jobs &amp; Skills</a>
+      <a href="#communities">Communities</a>
+      <a href="#glossary">Glossary</a>
+      <a href="#digest">Daily Digest</a>
+      <a href="#vote">Vote</a>
+      <a href="#support">Support</a>
+    </nav>
+  </div>
+</header>
+
+<main id="top">
+
+  <!-- ============ HOME / HERO ============ -->
+  <div class="hero">
+    <div class="wrap hero-grid">
+      <div>
+        <h1>The buildings behind the internet, explained plainly.</h1>
+        <p class="lede">Every photo you store online, every video you stream, every message you send has to physically live somewhere. That somewhere is usually a data center. This site explains what these buildings are, how they run, and why they matter — in everyday language, with no hype.</p>
+        <div class="plain-box">
+          <h2>A data center, in one sentence</h2>
+          <p>A data center is a building full of computers, called <strong>servers</strong>, that store information and run the apps and websites people use — kept running around the clock with backup power and constant cooling.</p>
+        </div>
+        <div class="hero-cta">
+          <a class="btn btn-primary" href="#basics">Start with the basics</a>
+          <a class="btn btn-ghost" href="#vote">Vote: for or against?</a>
+        </div>
+      </div>
+      <figure class="diagram" aria-label="Diagram of a data center">
+        <svg viewBox="0 0 340 240" width="100%" role="img" aria-labelledby="dg-title dg-desc">
+          <title id="dg-title">Simple diagram of a data center</title>
+          <desc id="dg-desc">Rows of server racks connected to power and cooling, serving phones and computers over the internet.</desc>
+          <rect x="10" y="30" width="200" height="180" rx="8" fill="none" stroke="currentColor" stroke-opacity=".35" stroke-width="2"/>
+          <g fill="none" stroke="currentColor" stroke-opacity=".55" stroke-width="2">
+            <rect x="28" y="52" width="34" height="140" rx="4"/>
+            <rect x="76" y="52" width="34" height="140" rx="4"/>
+            <rect x="124" y="52" width="34" height="140" rx="4"/>
+          </g>
+          <g fill="#0e6b5c">
+            <circle cx="45" cy="72" r="3.5"/><circle cx="45" cy="96" r="3.5"/><circle cx="45" cy="120" r="3.5"/><circle cx="45" cy="144" r="3.5"/>
+            <circle cx="93" cy="72" r="3.5"/><circle cx="93" cy="96" r="3.5"/><circle cx="93" cy="120" r="3.5"/><circle cx="93" cy="144" r="3.5"/>
+            <circle cx="141" cy="72" r="3.5"/><circle cx="141" cy="96" r="3.5"/><circle cx="141" cy="120" r="3.5"/><circle cx="141" cy="144" r="3.5"/>
+          </g>
+          <g stroke="currentColor" stroke-opacity=".4" stroke-width="1.5">
+            <line x1="34" y1="84" x2="56" y2="84"/><line x1="34" y1="108" x2="56" y2="108"/><line x1="34" y1="132" x2="56" y2="132"/>
+            <line x1="82" y1="84" x2="104" y2="84"/><line x1="82" y1="108" x2="104" y2="108"/><line x1="82" y1="132" x2="104" y2="132"/>
+            <line x1="130" y1="84" x2="152" y2="84"/><line x1="130" y1="108" x2="152" y2="108"/><line x1="130" y1="132" x2="152" y2="132"/>
+          </g>
+          <path d="M210 120 C 250 120, 255 70, 288 62" fill="none" stroke="#0e6b5c" stroke-width="2.5"/>
+          <path d="M210 130 C 250 140, 258 165, 288 168" fill="none" stroke="#0e6b5c" stroke-width="2.5"/>
+          <rect x="288" y="44" width="40" height="26" rx="5" fill="none" stroke="currentColor" stroke-opacity=".55" stroke-width="2"/>
+          <rect x="292" y="150" width="34" height="46" rx="4" fill="none" stroke="currentColor" stroke-opacity=".55" stroke-width="2"/>
+          <text x="110" y="226" text-anchor="middle" font-size="11" fill="currentColor" fill-opacity=".6" font-family="Archivo,sans-serif">Server racks</text>
+          <text x="308" y="88" text-anchor="middle" font-size="11" fill="currentColor" fill-opacity=".6" font-family="Archivo,sans-serif">Phone</text>
+          <text x="309" y="212" text-anchor="middle" font-size="11" fill="currentColor" fill-opacity=".6" font-family="Archivo,sans-serif">Computer</text>
+        </svg>
+        <figcaption>Inside: rows of server racks. Outside: the phones and computers those servers answer, all day and all night.</figcaption>
+      </figure>
+    </div>
+  </div>
+
+  <!-- ============ BASICS ============ -->
+  <section class="guide" id="basics">
+    <div class="wrap">
+      <h2>Data Center Basics</h2>
+      <p class="section-intro">Start here if the term is new to you. A data center is not mysterious — it is a warehouse built for computers instead of boxes.</p>
+      <div class="cards">
+        <article class="card">
+          <h3>What is a server?</h3>
+          <p>A server is a computer built to work for other computers. Your phone is good at being a phone; a server is good at storing files, running websites, and answering requests from thousands of people at once. Servers are usually flat, stackable machines with no screen or keyboard of their own.</p>
+          <p>When people say “the cloud,” they almost always mean servers in a data center somewhere. The cloud is not in the sky — it is in a building, on land, plugged into power and the internet.</p>
+        </article>
+        <article class="card">
+          <h3>Racks and rows</h3>
+          <p>Servers slide into tall metal frames called <strong>racks</strong>, the way books slide onto a shelf. Racks stand in long rows with aisles between them so technicians can walk through, swap a failed machine, and plug in cables.</p>
+          <p>A small facility might hold a few dozen racks. A large one holds thousands. Either way, the idea is the same: many computers, organized tightly, sharing power, cooling, and internet connections.</p>
+        </article>
+        <article class="card">
+          <h3>Why not just use regular computers?</h3>
+          <p>Ordinary computers shut down, overheat, lose power, and sit in places with slow internet. A business that takes payments, runs a hospital system, or hosts a popular app cannot afford its computers to go dark when the power flickers.</p>
+          <p>Data centers exist to solve exactly that: steady power with backups, strong cooling, fast internet connections, and people watching the equipment around the clock.</p>
+        </article>
+        <article class="card">
+          <h3>Who uses data centers?</h3>
+          <p>Almost everyone, usually without knowing it. Banks, hospitals, schools, governments, streaming services, stores, phone apps, and small businesses all rent or own space in data centers. Some big technology companies build their own; many smaller organizations rent space inside a shared facility, the way shops rent space in a mall.</p>
+        </article>
+        <article class="card wide">
+          <h3>Three words worth knowing early</h3>
+          <ul>
+            <li><strong>Uptime</strong> — how reliably a facility stays running. Keeping servers on, all the time, is the whole point of the building.</li>
+            <li><strong>Redundancy</strong> — having a backup for everything important: a second power feed, a second internet line, a spare cooling unit. If one fails, the other carries the load.</li>
+            <li><strong>Latency</strong> — the small delay between asking for something online and getting it. Data travels fast, but distance still adds delay, which is one reason facilities are built in many regions instead of one single place.</li>
+          </ul>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ HOW THEY WORK ============ -->
+  <section class="guide" id="how">
+    <div class="wrap">
+      <h2>How Data Centers Work</h2>
+      <p class="section-intro">Follow a single request — you tapping play on a video — through the building and back to your phone.</p>
+      <div class="steps">
+        <div class="step">
+          <div class="step-num" aria-hidden="true"></div>
+          <div>
+            <h3>Your request leaves your device</h3>
+            <p>When you open an app or tap play, your phone sends a small request out over the internet: “send me this video.” That request travels through network cables and equipment until it reaches the data center where the video is stored.</p>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num" aria-hidden="true"></div>
+          <div>
+            <h3>Network equipment routes it</h3>
+            <p>Inside the building, networking gear works like a mail room. It reads where each request is going and directs it to the right server, and it does the same for the answer coming back. Large facilities connect to several internet providers at once, so if one connection fails, traffic can go another way.</p>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num" aria-hidden="true"></div>
+          <div>
+            <h3>A server does the work</h3>
+            <p>The server finds the file, checks that you are allowed to see it, and starts sending it back in small pieces. Many tasks are split across several servers at once, so no single machine has to do all the work — and if one machine fails, others carry on.</p>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num" aria-hidden="true"></div>
+          <div>
+            <h3>Power keeps flowing, no matter what</h3>
+            <p>Servers run on electricity from the local grid. If that power drops, battery systems called <strong>UPS units</strong> take over instantly, and backup generators start up to carry the building until grid power returns. The computers never see the gap.</p>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num" aria-hidden="true"></div>
+          <div>
+            <h3>Cooling removes the heat</h3>
+            <p>Thousands of hard-working computers produce a great deal of heat. Cooling systems constantly pull that heat out of the server rooms so the machines stay in the temperature range they are built for. Cooling is one of the biggest ongoing jobs in the building — see the Cooling &amp; Energy section below.</p>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num" aria-hidden="true"></div>
+          <div>
+            <h3>People watch everything, around the clock</h3>
+            <p>Monitoring systems track power, temperature, and equipment health nonstop, and staff respond when something looks wrong — a failing drive, a hot aisle, a tripped alarm. Much of data center work is this steady watching, checking, and replacing parts before they cause an outage.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ WHAT THEY POWER ============ -->
+  <section class="guide" id="power">
+    <div class="wrap">
+      <h2>What Data Centers Power</h2>
+      <p class="section-intro">“Power” here means what depends on these buildings to work at all. The list is longer than most people expect.</p>
+      <div class="cards">
+        <article class="card">
+          <h3>Everyday communication</h3>
+          <p>Email, text and messaging apps, video calls, and social media all run on servers. When you send a photo to family, it is stored on a server and delivered from a server. Without data centers, none of that history would be saved or reachable from a new phone.</p>
+        </article>
+        <article class="card">
+          <h3>Entertainment and media</h3>
+          <p>Streaming video and music, online games, sports highlights, news sites, and podcasts are delivered from servers close to the viewer where possible, which keeps them fast and smooth. Your watch history and recommendations are stored the same way.</p>
+        </article>
+        <article class="card">
+          <h3>Money and shopping</h3>
+          <p>Banking apps, card payments, cash-transfer apps, and online stores depend on servers to process transactions and keep records. When a card reader in a store approves a purchase in a couple of seconds, that quick yes came from a computer in a facility like the ones this site describes.</p>
+        </article>
+        <article class="card">
+          <h3>Health, school, and government</h3>
+          <p>Hospital record systems, telehealth visits, school platforms, benefits and licensing systems, weather services, and emergency information all rely on data centers. That dependence is a big reason reliability and backup systems matter so much in these buildings.</p>
+        </article>
+        <article class="card">
+          <h3>Work and business tools</h3>
+          <p>Video meetings, shared documents, payroll, inventory, shipping and delivery tracking, and customer support systems run on servers. Many small businesses rent this computing instead of owning machines — cheaper to start, and someone else keeps the power and cooling running.</p>
+        </article>
+        <article class="card">
+          <h3>Newer computing, including AI</h3>
+          <p>Training and running artificial intelligence tools takes large amounts of computing power, which is one reason demand for data center space and electricity has been growing. AI is one workload among many — the same kinds of buildings also handle the ordinary email, banking, and streaming described above.</p>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ COOLING & ENERGY ============ -->
+  <section class="guide" id="cooling">
+    <div class="wrap">
+      <h2>Cooling and Energy</h2>
+      <p class="section-intro">A data center is really two systems at once: the computers doing the work, and the power and cooling systems that keep those computers alive. The second system is where much of the cost — and most of the local debate — lives.</p>
+      <div class="cards">
+        <article class="card">
+          <h3>Why computers need cooling</h3>
+          <p>Every watt of electricity a server uses ends up as heat. One server is like a small space heater; thousands of them in one room would cook themselves without constant cooling. Cooling equipment moves heat out of the server rooms and out of the building, nonstop, in every season.</p>
+        </article>
+        <article class="card">
+          <h3>How cooling is done</h3>
+          <p>Common approaches include large air-conditioning systems, fans that move hot air out and cool air in, and water-based systems that carry heat away in pipes. Some facilities use outside air when the weather is cool enough. Newer designs cool the machines more directly with liquid. The right choice depends on the climate, the building, and the equipment inside.</p>
+        </article>
+        <article class="card">
+          <h3>Where the electricity goes</h3>
+          <p>Power in a data center is split between the computing equipment itself and everything that supports it — cooling first, then lighting, security, and the losses that happen when electricity is converted and delivered. Operators track how much extra power the support systems use compared with the computing itself, because lower overhead means lower bills and less strain on the local grid.</p>
+        </article>
+        <article class="card">
+          <h3>Backup power</h3>
+          <p>Batteries bridge short outages — seconds to minutes — and generators cover longer ones. Both have to be tested regularly, because a backup that fails when needed is worse than none. Backup systems also matter to neighbors: generators are typically run in scheduled tests, and facilities are expected to keep that testing within local rules.</p>
+        </article>
+        <article class="card">
+          <h3>Water use</h3>
+          <p>Some cooling designs use water, including systems where water evaporates to carry heat away. How much water a facility uses depends heavily on its design and climate, and it is one of the first questions communities ask — fairly — when a project is proposed. Other designs use little or no water for cooling but may use more electricity instead. There is a real trade-off, and honest discussions name it.</p>
+        </article>
+        <article class="card">
+          <h3>Efficiency and waste heat</h3>
+          <p>Operators work to waste less: sealing hot and cold aisles apart, raising room temperatures within safe limits, and replacing older equipment. In some places, leftover heat from servers is captured to warm nearby buildings. None of this makes a facility free to run — but the difference between a careless design and a careful one is large, and it shows up in both power bills and community impact.</p>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ JOBS & SKILLS ============ -->
+  <section class="guide" id="jobs">
+    <div class="wrap">
+      <h2>Data Center Jobs and Skills</h2>
+      <p class="section-intro">Data centers are often described as “buildings full of computers with nobody inside.” That is a myth. They need people to build them, run them, fix them, and guard them. This section describes kinds of work — it is a guide, not a job board, and it lists no specific openings.</p>
+      <div class="cards">
+        <article class="card">
+          <h3>Data center technicians</h3>
+          <p>The hands-on core of the operation. Technicians install and replace servers, run and fix cabling, swap failed parts, and respond to monitoring alerts. Useful skills: comfort with computer hardware, careful record-keeping, and staying calm during an outage at 3 a.m.</p>
+        </article>
+        <article class="card">
+          <h3>Electricians and power technicians</h3>
+          <p>Facilities run on serious electrical systems: incoming utility power, switchgear, battery rooms, and generators. Licensed electricians and power technicians keep all of it safe and working. This is skilled-trades work, and trade experience is valued here.</p>
+        </article>
+        <article class="card">
+          <h3>Cooling and mechanical technicians</h3>
+          <p>The cooling plant — chillers, pumps, air handlers — is industrial equipment, and it needs the same kind of mechanical and HVAC skill used in other large buildings. If you can keep a factory’s cooling running, you understand most of what a data center needs.</p>
+        </article>
+        <article class="card">
+          <h3>Network technicians and engineers</h3>
+          <p>These workers build and maintain the connections inside the building and out to the internet: fiber and copper cabling, switches, and routers. Skills range from physical cable work to network design and troubleshooting.</p>
+        </article>
+        <article class="card">
+          <h3>Construction trades</h3>
+          <p>Before anyone runs a data center, somebody builds it: site work, concrete, steel, electrical, mechanical, and finishing trades, plus the crews who later expand or retrofit the building. Construction is one of the largest sources of data-center-related work in a community, though it is project-based rather than permanent.</p>
+        </article>
+        <article class="card">
+          <h3>Security, logistics, and operations support</h3>
+          <p>Facilities are guarded around the clock, receive constant deliveries of equipment and parts, and need people managing schedules, vendors, safety, and compliance. Not every data center job involves touching a server.</p>
+        </article>
+        <article class="card wide">
+          <h3>How people get into this work</h3>
+          <ul>
+            <li><strong>From the trades:</strong> electrical, HVAC, and mechanical experience transfers directly to the power and cooling side.</li>
+            <li><strong>From IT support:</strong> help-desk and hardware repair experience is a common first step toward technician roles.</li>
+            <li><strong>From the military:</strong> technical ratings and MOS experience in power, electronics, and IT map closely to facility roles.</li>
+            <li><strong>Certifications and training:</strong> vendor and industry training exists for networking, electrical safety, and facility operations; what a given employer requires varies, so read real postings carefully.</li>
+            <li><strong>Soft skills that matter:</strong> accurate documentation, shift reliability, and clear communication during incidents are prized everywhere in this field.</li>
+          </ul>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ COMMUNITIES ============ -->
+  <section class="guide" id="communities">
+    <div class="wrap">
+      <h2>Data Centers and Local Communities</h2>
+      <p class="section-intro">When a data center is proposed in a town, neighbors ask fair questions. This section lays out the honest version of both sides — what a community can gain, what it can give up, and what to ask before deciding.</p>
+      <div class="cards">
+        <article class="card">
+          <h3>What a community can gain</h3>
+          <ul>
+            <li>Construction work while the facility is built and expanded</li>
+            <li>Permanent jobs in operations, trades, and security</li>
+            <li>Property and other tax revenue from a large facility</li>
+            <li>Upgrades to local power and fiber infrastructure that others may also use</li>
+            <li>Customers for local electricians, mechanics, caterers, and suppliers</li>
+          </ul>
+        </article>
+        <article class="card">
+          <h3>What a community can give up</h3>
+          <ul>
+            <li>Land that could have gone to other uses</li>
+            <li>A large new demand on the local power grid</li>
+            <li>Water use, where the cooling design uses water</li>
+            <li>Noise from cooling equipment and generator testing</li>
+            <li>Tax breaks, if officials offer them, that reduce the public benefit</li>
+          </ul>
+        </article>
+        <article class="card">
+          <h3>Questions worth asking any project</h3>
+          <ul>
+            <li>How much power will it use, and who pays for grid upgrades?</li>
+            <li>How much water will it use, and where does that water come from?</li>
+            <li>How many permanent jobs, of what kinds, at what pay?</li>
+            <li>What tax incentives are being offered, and for how long?</li>
+            <li>What are the noise limits, and how are they enforced?</li>
+            <li>What happens to the building if the operator leaves?</li>
+          </ul>
+        </article>
+        <article class="card">
+          <h3>Why the argument gets heated</h3>
+          <p>The benefits and the costs land on different people. Tax revenue may help a whole county while the noise and traffic sit on one road. A facility can be a good deal for a region and a bad deal for its nearest neighbors at the same time. Honest local debate makes room for both facts instead of pretending only one side exists — and the vote below is one small way this page lets readers register where they stand.</p>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ VOTE ============ -->
+  <section class="guide" id="vote">
+    <div class="wrap">
+      <h2>Vote: Data Centers — For or Against?</h2>
+      <p class="section-intro">A simple poll. Read the guides above, then register where you stand.</p>
+      <div class="poll">
+        <h3>Should more data centers be built?</h3>
+        <p class="poll-q">Tap one button to cast your vote. Both counts start at zero — no votes are pre-loaded, and no total has been carried over from anywhere else.</p>
+        <div class="poll-grid">
+          <div class="poll-side">
+            <div class="poll-label">Votes for data centers</div>
+            <div class="poll-count" id="countFor">0</div>
+            <button class="vote-btn vote-for" id="btnFor" type="button">Vote FOR Data Centers</button>
+          </div>
+          <div class="poll-side">
+            <div class="poll-label">Votes against data centers</div>
+            <div class="poll-count" id="countAgainst">0</div>
+            <button class="vote-btn vote-against" id="btnAgainst" type="button">Vote AGAINST Data Centers</button>
+          </div>
+        </div>
+        <div class="poll-bar" aria-hidden="true">
+          <div class="fill-for" id="barFor" style="width:0%"></div>
+          <div class="fill-against" id="barAgainst" style="width:0%"></div>
+        </div>
+        <p class="poll-status" id="pollStatus" role="status" aria-live="polite">No votes yet — both counts are at zero.</p>
+        <p class="poll-honest">What these numbers are: the totals above count only votes cast on this page, in this visit, on this device. They are kept in the page’s memory only — nothing is sent to a server or stored — so the counts reset to zero when the page is reloaded. They are not a count of all visitors, subscribers, or voters anywhere else.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ GLOSSARY ============ -->
+  <section class="guide" id="glossary">
+    <div class="wrap">
+      <h2>Glossary</h2>
+      <p class="section-intro">The words used on this site — and in most news stories about data centers — in plain language.</p>
+      <dl class="glossary">
+        <div class="term"><dt>Server</dt><dd>A computer built to store information and do work for other computers and people, usually without its own screen or keyboard.</dd></div>
+        <div class="term"><dt>Rack</dt><dd>A tall metal frame that holds many servers stacked in a standard size, like a shelving unit for computers.</dd></div>
+        <div class="term"><dt>The cloud</dt><dd>An everyday name for computing that happens on servers in data centers instead of on your own device. The “cloud” is physical buildings.</dd></div>
+        <div class="term"><dt>Latency</dt><dd>The delay between sending a request online and getting a response. Shorter distance usually means lower latency.</dd></div>
+        <div class="term"><dt>Uptime</dt><dd>The share of time a system is working and available. Keeping uptime high is the central promise of a data center.</dd></div>
+        <div class="term"><dt>Redundancy</dt><dd>Backup capacity for critical systems — extra power feeds, internet lines, or cooling units — so one failure does not cause an outage.</dd></div>
+        <div class="term"><dt>UPS (uninterruptible power supply)</dt><dd>A battery system that instantly takes over when grid power drops, covering the gap until generators start.</dd></div>
+        <div class="term"><dt>Generator</dt><dd>An on-site engine, usually fuel-powered, that produces electricity for the building during a longer power outage.</dd></div>
+        <div class="term"><dt>Cooling</dt><dd>The systems that remove heat from server rooms, using air, water, or liquid, so equipment stays at a safe temperature.</dd></div>
+        <div class="term"><dt>Colocation</dt><dd>A facility where many different organizations rent space, power, and cooling for their own servers — like renting units in one shared building.</dd></div>
+        <div class="term"><dt>Hyperscale</dt><dd>A term for very large data centers, usually built and run by major technology companies for their own services.</dd></div>
+        <div class="term"><dt>Fiber</dt><dd>Glass-strand cable that carries data as light. Data centers need large fiber connections to move information quickly.</dd></div>
+        <div class="term"><dt>Grid</dt><dd>The shared network of power generation and lines that delivers electricity to homes and businesses — including data centers.</dd></div>
+        <div class="term"><dt>Workload</dt><dd>Any job given to the computers: hosting a website, processing a payment, training an AI model, or storing backups.</dd></div>
+        <div class="term"><dt>Backup</dt><dd>A copy of important data kept separately, so information survives a failed machine, a fire, or a mistake.</dd></div>
+        <div class="term"><dt>Technician</dt><dd>A hands-on worker who installs, maintains, and repairs the equipment inside a data center.</dd></div>
+      </dl>
+    </div>
+  </section>
+
+  <!-- ============ DAILY DIGEST ============ -->
+  <section class="guide" id="digest">
+    <div class="wrap">
+      <h2>The Daily Digest, Explained</h2>
+      <p class="section-intro">“Daily” in this site’s name points to a simple idea: a short, plain-language digest about data centers that a reader could follow day by day. This page explains what such a digest would include. It is a description of the format — this draft does not publish a live digest, and it has no subscribers.</p>
+      <div class="digest-list">
+        <article class="card">
+          <h3>One plain-language explainer</h3>
+          <p>Each edition would take one idea — a term, a system, a trade-off — and explain it the way the guides on this site do: what it is, why it matters, and what each side of the argument says.</p>
+        </article>
+        <article class="card">
+          <h3>A term of the day</h3>
+          <p>One glossary word per edition, defined in a sentence or two, so regular readers steadily build the vocabulary to follow news stories and public meetings about data centers.</p>
+        </article>
+        <article class="card">
+          <h3>How-it-works notes</h3>
+          <p>Short pieces on the physical side: power, cooling, water, backup systems, and the skilled work that keeps a facility running — the parts of the story that are usually left out of headlines.</p>
+        </article>
+        <article class="card">
+          <h3>Community questions</h3>
+          <p>The questions communities are asking about proposed facilities — power, water, jobs, noise, tax deals — presented with the strongest honest version of each side, so readers can judge for themselves.</p>
+        </article>
+        <article class="card">
+          <h3>Skills and work spotlights</h3>
+          <p>Plain descriptions of the kinds of jobs data centers support and the training paths into them — educational only, not job listings and not a promise of work.</p>
+        </article>
+        <article class="card">
+          <h3>The running vote</h3>
+          <p>The for-or-against question from this page, revisited over time, with the totals labeled for exactly what they are — votes cast by readers of the digest, never dressed up as a scientific poll.</p>
+        </article>
+      </div>
+      <div class="note-box">
+        <strong>An honest note about this draft:</strong> the digest above is a plan, described so reviewers can judge the idea. No editions have been sent, no subscriber list exists, and no revenue is claimed. Nothing on this page should be read as live news coverage.
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ SUPPORT / PAY ============ -->
+  <section class="guide" id="support">
+    <div class="wrap">
+      <h2>Support Daily Data Centers</h2>
+      <p class="section-intro">Two one-time options, exactly as offered. Neither one is a subscription.</p>
+      <div class="pay-grid">
+        <article class="pay-card">
+          <h3>One-time payment — $15 via Chime</h3>
+          <p>Send a one-time $15 support payment through Chime:</p>
+          <ol class="chime-steps">
+            <li>Open the <strong>Chime</strong> app</li>
+            <li>Tap <strong>Pay Anyone</strong></li>
+            <li>Send <strong>$15</strong> to <span class="chime-dest">$DDBABY12</span></li>
+          </ol>
+          <p class="fineprint" style="margin-top:12px">This is a <strong>one-time</strong> payment. It is <strong>not a monthly subscription</strong>, it <strong>does not repeat</strong>, and it <strong>does not auto-renew</strong>.</p>
+        </article>
+        <article class="pay-card">
+          <h3>One-time support — $1 via Chime</h3>
+          <p>Send a one-time $1 support payment through Chime:</p>
+          <ol class="chime-steps">
+            <li>Open the <strong>Chime</strong> app</li>
+            <li>Tap <strong>Pay Anyone</strong></li>
+            <li>Send <strong>$1</strong> to <span class="chime-dest">(251) 422-4242</span> or <span class="chime-dest">destindismukes1@gmail.com</span></li>
+          </ol>
+          <p class="fineprint" style="margin-top:12px">This is a <strong>one-time $1 support payment</strong>. It is <strong>not a subscription</strong>.</p>
+        </article>
+      </div>
+      <div class="subscribe-row">
+        <button class="btn-disabled" type="button" disabled aria-disabled="true">Subscribe — Monthly</button>
+        <p><strong>Monthly subscriptions are not yet connected.</strong> The Subscribe button is disabled on purpose. The only options available are the two one-time payments above.</p>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  <div class="wrap">
+    <p><strong class="sans">Daily Data Centers</strong> — a plain-language guide to the buildings behind the internet.</p>
+    <p>This is a review draft. It is not published publicly. It carries no news claims, no subscriber counts, and no revenue claims — the guides, glossary, digest explanation, vote, and the two one-time support options above are the whole site.</p>
+  </div>
+</footer>
+
+<script>
+(function(){
+  var votesFor = 0;
+  var votesAgainst = 0;
+  var myVote = null;
+
+  var countFor = document.getElementById('countFor');
+  var countAgainst = document.getElementById('countAgainst');
+  var barFor = document.getElementById('barFor');
+  var barAgainst = document.getElementById('barAgainst');
+  var status = document.getElementById('pollStatus');
+  var btnFor = document.getElementById('btnFor');
+  var btnAgainst = document.getElementById('btnAgainst');
+
+  function render(){
+    countFor.textContent = votesFor;
+    countAgainst.textContent = votesAgainst;
+    var total = votesFor + votesAgainst;
+    if (total > 0){
+      barFor.style.width = (votesFor / total * 100) + '%';
+      barAgainst.style.width = (votesAgainst / total * 100) + '%';
+    } else {
+      barFor.style.width = '0%';
+      barAgainst.style.width = '0%';
+    }
+  }
+
+  function cast(side){
+    if (myVote !== null) return;
+    myVote = side;
+    if (side === 'for'){ votesFor++; } else { votesAgainst++; }
+    render();
+    btnFor.disabled = true;
+    btnAgainst.disabled = true;
+    var total = votesFor + votesAgainst;
+    status.textContent = 'Your vote ' + (side === 'for' ? 'FOR' : 'AGAINST') +
+      ' data centers is counted above. Current totals on this page: ' +
+      votesFor + ' for, ' + votesAgainst + ' against (' + total +
+      (total === 1 ? ' vote' : ' votes') + ' cast in this visit).';
+  }
+
+  btnFor.addEventListener('click', function(){ cast('for'); });
+  btnAgainst.addEventListener('click', function(){ cast('against'); });
+  render();
+})();
+</script>
+</body>
+</html>
